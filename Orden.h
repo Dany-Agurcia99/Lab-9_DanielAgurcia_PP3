@@ -42,3 +42,7 @@ public:
     string toString();
 };
 #endif
+//cliente pedidos +1
+//repartidor ordenes +1
+//empleado ordenes +1
+//escribir
