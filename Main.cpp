@@ -2,7 +2,8 @@
 using std::cin;
 using std::cout;
 using std::endl;
-
+#include <fstream>
+using std::ofstream;
 #include <string>
 using std::string;
 #include <vector>
@@ -28,7 +29,7 @@ void Personas(), Negocios(), Ordenes();
 void CrearPersona(), ListarPersona(), EliminarPersona();
 void CrearNegocio(), ListarNegocio(), EliminarNegocio();
 void CrearOrden(), ListarOrden(), CCOrden();
-
+void EscribirArchivo(char *, Orden *);
 int main()
 {
     int opcion = 0;
@@ -59,6 +60,26 @@ int main()
         else if (opcion == 4)
         {
             cout << "Adios" << endl;
+            for (int i = 0; i < lista_clientes.size(); i++)
+            {
+                delete lista_clientes[i];
+            }
+            for (int i = 0; i < lista_repartidores.size(); i++)
+            {
+                delete lista_repartidores[i];
+            }
+            for (int i = 0; lista_empleados.size(); i++)
+            {
+                delete lista_empleados[i];
+            }
+            for (int i = 0; lista_ordenes.size(); i++)
+            {
+                delete lista_ordenes[i];
+            }
+            for (int i = 0; lista_negocios.size(); i++)
+            {
+                delete lista_negocios[i];
+            }
         }
     }
     return 0;
@@ -378,7 +399,7 @@ void CrearOrden()
     cout << "seleccione la posicion del repartidor: ";
     cin >> posicion;
     repartidor = lista_repartidores[posicion];
-    vector<Producto *> productos = negocio->getlista_productos;
+    vector<Producto *> productos = negocio->getlista_productos();
     for (int i = 0; i < productos.size(); i++)
     {
         cout << productos[i]->toString() << endl;
@@ -405,14 +426,13 @@ void CCOrden()
     int opcion;
     cout << "Menu" << endl
          << "1-Cancelar" << endl
-         << "2-Confirmar" << endl
-         << "3-Salir" << endl;
+         << "2-Confirmar" << endl;
     cout << "Ingrese la opcion: ";
     cin >> opcion;
     switch (opcion)
     {
     case 1:
-
+    {
         for (int i = 0; i < lista_ordenes.size(); i++)
         {
             cout << lista_ordenes[i]->toString() << endl;
@@ -422,10 +442,11 @@ void CCOrden()
         cin >> posicion;
         Orden *orden = lista_ordenes[posicion];
         orden->setestado("Cancelado");
-        
-        break;
+        EscribirArchivo("Facturas",orden);
+    }
+    break;
     case 2:
-
+    {
         for (int i = 0; i < lista_ordenes.size(); i++)
         {
             cout << lista_ordenes[i]->toString() << endl;
@@ -439,9 +460,22 @@ void CCOrden()
         orden->getrepartidor()->setordenes(orden->getrepartidor()->getordenes() + 1);
         for (int k = 0; k < lista_empleados.size(); k++)
         {
-            lista_empleados[k]->settotal_ordenes(lista_empleados[k]->gettotal_ordenes()+1);
+            lista_empleados[k]->settotal_ordenes(lista_empleados[k]->gettotal_ordenes() + 1);
+            EscribirArchivo("Facturas",orden);
         }
+    }
+    break;
+    }
+}
 
-        break;
+void EscribirArchivo(char *filename, Orden *orden)
+{
+    ofstream file;
+    file.open(filename, std::ios::app);
+    if (file.is_open())
+    {
+        file << orden->toString() << endl;
+        file << "**********************";
+        file.close();
     }
 }

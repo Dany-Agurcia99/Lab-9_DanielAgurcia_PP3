@@ -70,6 +70,6 @@ string Orden::toString()
 {
     string OrdenStr;
     string edad = to_string(cliente->getedad());
-    OrdenStr = cliente->getnombre() + edad + cliente->getdireccion() + negocio->getnombre() + producto->getnombre();
+    OrdenStr = "["+cliente->getnombre()+"][" + edad +"]["+ cliente->getdireccion()+"][" + negocio->getnombre() +"]["+ producto->getnombre()+"]";
     return OrdenStr;
 }
